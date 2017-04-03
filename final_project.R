@@ -1,42 +1,56 @@
-
 library(jsonlite)
 library(plyr)
 
-df <- fromJSON(file("city_search.json"))
+# import data
+cityData <- fromJSON(file("city_search.json"))
 
-df_new<-matrix(unlist(df$user), ncol=3, byrow=TRUE)
+# unlist the "user" column into a temp df
+dftemp<-matrix(unlist(cityData$user), ncol=3, byrow=TRUE)
 
-df <- cbind(df, df_new)
+# combine the two dfs and rename the columns 
+cityData <- cbind(cityData, dftemp)
+names(cityData)[names(cityData)=="1"] <- "user_id"
+names(cityData)[names(cityData)=="2"] <- "joining_date"
+names(cityData)[names(cityData)=="3"] <- "country"
 
-names(df)[names(df)=="1"] <- "user_id"
-names(df)[names(df)=="2"] <- "joining_date"
-names(df)[names(df)=="3"] <- "country"
+# drop the old "user" column
+cityData = subset(cityData, select = -c(user))
 
-df = subset(df, select = -c(user))
+# temp df with city columns
+dftemp <-cityData[c(3)]
 
-df_cities <-df[c(4,3)]
-citylist <- strsplit(as.character(df_cities$cities), ",")
+# split the cities in the column into a list
+citylist <- strsplit(as.character(cityData$cities), ",")
 
-df_cities["num_of_cities"] <- NA
+# add a column for the number of cities in the list
+dftemp["num_of_cities"] <- NA
 
+# populate the "num_of_cities" column
 for (i in 1: length(citylist)){
-  df_cities$num_of_cities[i] <- length(citylist[[i]])
-}
-df_cities$num_of_cities[1] <-length(citylist[[1]])
-
-
-dftemp <- data.frame(matrix(ncol=1))
-colnames(dftemp) <- c("num_of_cities")
-dftemp2 <-data.frame(matrix(ncol=1))
-colnames(dftemp2) <- c("num_of_cities")
-
-for (i in 1:(length(df_cities))) {
-  dftemp$num_of_cities <- as.character(length(df_cities[[i]]))
-  dftemp2 <- rbind(dftemp, dftemp2)
+  dftemp$num_of_cities[i] <- length(citylist[[i]])
 }
 
-dftemp2 <- dftemp2[-c(1),]
+# find the max number of cities searched in one session
+max(dftemp[,2]) #11
 
-length(df_cities[[1]])
-dftemp <- data.frame(matrix(ncol=5))
-dftemp["File Name"] <- NA
+# create new temp df to put the cities into
+dftemp2 <- data.frame(matrix(ncol=11, nrow=length(citylist)))
+
+# populate the df
+for (j in 1:11){
+  for (i in 1:length(citylist)){
+    dftemp2[j][[1]][i] <- citylist[[i]][j]
+  }
+}
+
+# rename the columns
+names(dftemp2) <- c("city1", "city2", "city3", "city4", "city5", "city6", "city7", "city8", "city9", "city10", "city11")
+
+# combine the dfs
+dftemp <- cbind(dftemp, dftemp2)
+
+# add to master cityData df
+cityData <- cbind(cityData, dftemp[2:13])
+
+# reorder the columns
+cityData <- cityData[,c(1:3,7:18,4:6)]
