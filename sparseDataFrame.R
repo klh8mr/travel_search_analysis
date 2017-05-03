@@ -17,7 +17,7 @@ df <- cbind(df, df_new) %>%
 
 
 
-### Continue Cleaning dataframe
+## Continue Cleaning dataframe
 ###############################################
 # NOTE - added below because columns were still lists
 df[,1:3] <- sapply(df[,1:3], function(x) unlist(x))
@@ -29,7 +29,7 @@ names(df)[names(df)=="3"] <- "country"
 df = subset(df, select = -c(user))
 
 
-### Create Sparse Matrix
+## Create Sparse Matrix
 ###############################################
 # List of unique cities
 city <- strsplit(as.character(df$cities), ", ") 
@@ -59,7 +59,7 @@ for (i in 1:nrow(df)){
 
 write.csv(df, "city_search_sparse.csv")
 
-### Explore Data
+## Explore Data
 ###############################################
 df <- read.csv("city_search_sparse.csv")
 names(df)[names(df)=="X1"] <- "user_id"
@@ -82,7 +82,7 @@ df$country[7]==''
 countryNA <- df[df$country=='',]
 
 
-### Datetime
+## Datetime
 ###############################################
 library(anytime)
 library(lubridate)
@@ -106,11 +106,48 @@ df$session_wday <- wday(df$session_date)
 table(df$session_wday)
 
 
-### Cities
+
+
+## Users
+###############################################
+# Create user dataframe
+df_users <- unique(df[,c('user_id', 'joining_date', 'country')])
+
+df_users
+
+df_users$avgTimeElapsed <- 0
+df_users$n_visits <- 0
+df_users$CitiesSearched_total <- 0
+
+for (x in unique(df$user_id)) {
+  n_visits <- nrow(df[df$user_id==x,])
+  df_users$n_visits[df_users$user_id==x] <- n_visits
+  
+  df_users$CitiesSearched_total[df_users$user_id==x] <- sum(rowSums(df[df$user_id==x, 8:96]))
+  
+  if (n_visits>1){
+    dates <- sort(df$session_date[df$user_id==x]) # dates a user visited the site, sorted
+    timeElapsed <- diff(dates) # number of days between each visit
+    df_users$avgTimeElapsed[df_users$user_id==x] <- mean(timeElapsed) # add the average days between visits to user df
+  }
+}
+
+clusters <- kmeans(df_users[,-c(1:3)], 2)
+clusters$cluster
+
+## Cities
 ###############################################
 # no repeat city names with mispellings
 sort(names(df[,8:ncol(df)]))
 
-# list of most frequently searched cities
+# list of most frequently searched cities - lines up with market basket analysis
 city_counts <- sapply(df[,8:ncol(df)], function(x) sum(x))
 sort(city_counts, decreasing=TRUE)
+
+
+## Recomender Systems
+###############################################
+
+#https://www.r-bloggers.com/recommender-systems-101-a-step-by-step-practical-example-in-r/
+#http://blog.yhat.com/posts/recommender-system-in-r.html
+

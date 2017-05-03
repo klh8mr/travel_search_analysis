@@ -81,10 +81,17 @@ image(sample(txn, 100))
 
 # Generate some rules
 rules <- apriori(data=txn, 
-                   parameter=list(support=0.01, confidence=0.4, minlen=1)) 
+                   parameter=list(support=0.01, confidence=0.1, minlen=1)) 
 summary(rules)
 inspect(sort(rules, by="lift", decreasing=TRUE))
 
+### By Country
+###############################################
 
-library(arulesViz)
+
+### Visualization
+###############################################
+library("arulesViz")
+plot(rules)
+
 plot(rules,method="graph",interactive=TRUE,shading=NA)
