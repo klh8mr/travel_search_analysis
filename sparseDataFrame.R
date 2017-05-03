@@ -59,6 +59,9 @@ for (i in 1:nrow(df)){
 
 write.csv(df, "city_search_sparse.csv")
 
+
+
+
 ## Explore Data
 ###############################################
 df <- read.csv("city_search_sparse.csv")
@@ -133,7 +136,10 @@ for (x in unique(df$user_id)) {
 }
 
 clusters <- kmeans(df_users[,-c(1:3)], 2)
-clusters$cluster
+df_users$label <- clusters$cluster
+
+ggplot(df_users, aes(x=avgTimeElapsed, y=n_visits, color=label)) +
+  geom_point()
 
 ## Cities
 ###############################################

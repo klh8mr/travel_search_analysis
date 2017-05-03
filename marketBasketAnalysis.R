@@ -85,13 +85,19 @@ rules <- apriori(data=txn,
 summary(rules)
 inspect(sort(rules, by="lift", decreasing=TRUE))
 
-### By Country
-###############################################
-
 
 ### Visualization
 ###############################################
-library("arulesViz")
+library("arulesViz") # https://cran.r-project.org/web/packages/arulesViz/vignettes/arulesViz.pdf
 plot(rules)
 
 plot(rules,method="graph",interactive=TRUE,shading=NA)
+plot(rules,method="graph")
+
+plot(rules, method="paracoord", control=list(reorder=TRUE))
+
+inspectDT(rules)
+
+
+### By Country
+###############################################
