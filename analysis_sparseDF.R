@@ -1,6 +1,9 @@
 library(anytime)
 library(lubridate)
+library(magrittr)
+library(dplyr)
 
+setwd("~/UVaMSDS/MachineLearning/FinalProject")
 df <- read.csv("city_search_sparse.csv")
 
 ## Explore Data
@@ -44,12 +47,6 @@ df$session_wday <- wday(df$session_date)
 table(df$session_wday)
 
 
-clusters <- kmeans(df_users[,-c(1:3)], 2)
-df_users$label <- clusters$cluster
-
-ggplot(df_users, aes(x=avgTimeElapsed, y=n_visits, color=label)) +
-  geom_point()
-
 ## Cities
 ###############################################
 # no repeat city names with mispellings
@@ -65,6 +62,29 @@ sort(city_counts, decreasing=TRUE)
 ## Perform PCA
 pr.out = prcomp(df[,-5], scale = TRUE)
 names(pr.out)
+
+## means and standard deviations used for scaling prior to PCA
+pr.out$center
+pr.out$scale
+pr.out$x
+
+plot(pr.out$x[,"PC1"], pr.out$x[,"PC2"])
+df$pc1 <- pr.out$x[,"PC1"]
+df$pc2 <- pr.out$x[,"PC2"]
+plot(df$pc1, df$pc2)
+
+library(ggplot2)
+ggplot(df, aes(pc1, pc2)) +
+  geom_point(aes(colour=Species))
+
+
+## Cluster Users
+###############################################
+clusters <- kmeans(df_users[,-c(1:3)], 2)
+df_users$label <- clusters$cluster
+
+ggplot(df_users, aes(x=avgTimeElapsed, y=n_visits, color=label)) +
+  geom_point()
 
 
 ## Recomender Systems
