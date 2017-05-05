@@ -73,6 +73,9 @@ cityData <- cbind(cityData, dftemp[2:13])
 # reorder the columns
 cityData <- cityData[,c(1:3,7:18,4:6)]
 
+# write out to csv for market analysis
+write.csv(cityData[,c(5:15,18)], "marketbasket.csv",row.names = FALSE)
+
 #################################
 ## Breaking Out List of States ## 
 #################################
