@@ -3,28 +3,27 @@ library(plyr)
 library(stringr)
 library(arules)
 library(magrittr)
+library(anytime)
+library(lubridate)
 
 setwd("~/UVaMSDS/MachineLearning/FinalProject")
 df <- fromJSON(file("city_search.json"))
-df_save <- df
+df_save -> df
 
+
+## Clean dataframe
+###############################################
 df_new <- matrix(unlist(df$user), ncol=3, byrow=TRUE)
 
 df <- cbind(df, df_new) %>%
   data.frame()
 
-
-
-
-
-## Continue Cleaning dataframe
-###############################################
 # NOTE - added below because columns were still lists
 df[,1:3] <- sapply(df[,1:3], function(x) unlist(x))
 
-names(df)[names(df)=="1"] <- "user_id"
-names(df)[names(df)=="2"] <- "joining_date"
-names(df)[names(df)=="3"] <- "country"
+names(df)[names(df)=="X1"] <- "user_id"
+names(df)[names(df)=="X2"] <- "joining_date"
+names(df)[names(df)=="X3"] <- "country"
 
 df = subset(df, select = -c(user))
 
@@ -57,39 +56,6 @@ for (i in 1:nrow(df)){
   }
 }
 
-write.csv(df, "city_search_sparse.csv")
-
-
-
-
-## Explore Data
-###############################################
-df <- read.csv("city_search_sparse.csv")
-names(df)[names(df)=="X1"] <- "user_id"
-names(df)[names(df)=="X2"] <- "joining_date"
-names(df)[names(df)=="X3"] <- "country"
-
-# Unique users - 5777 
-length(unique(df$user_id)) 
-# Number of users visitng x times
-table(table(df$user_id))
-
-# Get the user_id's of those who visited x number of times
-x <- 1
-table(df$user_id)[(table(df$user_id)==x)] %>%
-  rownames()
-
-# missing country
-unique(df$country)
-df$country[7]==''
-countryNA <- df[df$country=='',]
-
-
-## Datetime
-###############################################
-library(anytime)
-library(lubridate)
-
 # Convert session and joining date to lubridate format
 df$session_date <- ymd(anydate(df$unix_timestamp))
 df$joining_date <- ymd(df$joining_date)
@@ -99,25 +65,18 @@ df$daysSinceJoin <- (df$session_date - df$joining_date) %>%
   as.character() %>%
   as.numeric()
 
-# How old are most of the accounts?
-table(df$daysSinceJoin) %>%
-  sort()
-
-hist(df$daysSinceJoin, breaks=150)
-
-df$session_wday <- wday(df$session_date)
-table(df$session_wday)
+# Write sparse Dataframe
+write.csv(df, "city_search_sparse.csv")
 
 
 
-
-## Users
+## Create user dataframe
 ###############################################
-# Create user dataframe
+
+# Select Columns of interest from sparse dataframe
 df_users <- unique(df[,c('user_id', 'joining_date', 'country')])
 
-df_users
-
+# Create empty columns for calculations below
 df_users$avgTimeElapsed <- 0
 df_users$n_visits <- 0
 df_users$CitiesSearched_total <- 0
@@ -134,26 +93,4 @@ for (x in unique(df$user_id)) {
     df_users$avgTimeElapsed[df_users$user_id==x] <- mean(timeElapsed) # add the average days between visits to user df
   }
 }
-
-clusters <- kmeans(df_users[,-c(1:3)], 2)
-df_users$label <- clusters$cluster
-
-ggplot(df_users, aes(x=avgTimeElapsed, y=n_visits, color=label)) +
-  geom_point()
-
-## Cities
-###############################################
-# no repeat city names with mispellings
-sort(names(df[,8:ncol(df)]))
-
-# list of most frequently searched cities - lines up with market basket analysis
-city_counts <- sapply(df[,8:ncol(df)], function(x) sum(x))
-sort(city_counts, decreasing=TRUE)
-
-
-## Recomender Systems
-###############################################
-
-#https://www.r-bloggers.com/recommender-systems-101-a-step-by-step-practical-example-in-r/
-#http://blog.yhat.com/posts/recommender-system-in-r.html
 

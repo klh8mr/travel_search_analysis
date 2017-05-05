@@ -123,10 +123,6 @@ itemFrequencyPlot(txn_all, topN=10)
 image(sample(txn_all, 100))
 
 # Generate rules:  Two options for generating rules below
-# 1. Minlength=1 will return rules with empty lhs, might be useful (highest prob of searching given only searching one city)
-rules_all <- apriori(data=txn_all, 
-                   parameter=list(support=0.01, confidence=0.1, minlen=1))
-# 2. Minlength=2 will NOT return rules with empty lhs
 rules_all <- apriori(data=txn_all, 
                  parameter=list(support=0.005, confidence=0.1, minlen=2)) 
 summary(rules_all)
@@ -143,7 +139,7 @@ itemFrequencyPlot(txn_local, support=0.05) # frequency of item across all basket
 itemFrequencyPlot(txn_local, topN=10)
 
 rules_local <- apriori(data=txn_local, 
-                     parameter=list(support=0.01, confidence=0.1, minlen=1))
+                     parameter=list(support=0.01, confidence=0.1, minlen=2))
 summary(rules_local)
 inspect(sort(rules_local, by="lift", decreasing=TRUE))
 
@@ -155,7 +151,7 @@ itemFrequencyPlot(txn_dist, support=0.05) # frequency of item across all baskets
 itemFrequencyPlot(txn_dist, topN=10)
 
 rules_dist <- apriori(data=txn_dist, 
-                       parameter=list(support=0.01, confidence=0.1, minlen=1))
+                       parameter=list(support=0.01, confidence=0.1, minlen=2))
 summary(rules_dist)
 inspect(sort(rules_dist, by="lift", decreasing=TRUE))
 
@@ -169,7 +165,7 @@ itemFrequencyPlot(txn_us, support=0.05) # frequency of item across all baskets
 itemFrequencyPlot(txn_us, topN=10)
 
 rules_us <- apriori(data=txn_us, 
-                      parameter=list(support=0.01, confidence=0.1, minlen=1))
+                      parameter=list(support=0.01, confidence=0.1, minlen=2))
 summary(rules_us)
 inspect(sort(rules_us, by="lift", decreasing=TRUE))
 
@@ -181,7 +177,7 @@ itemFrequencyPlot(txn_can, support=0.05) # frequency of item across all baskets
 itemFrequencyPlot(txn_can, topN=10)
 
 rules_can <- apriori(data=txn_can, 
-                    parameter=list(support=0.01, confidence=0.1, minlen=1))
+                    parameter=list(support=0.01, confidence=0.1, minlen=2))
 summary(rules_can)
 inspect(sort(rules_can, by="lift", decreasing=TRUE))
 
@@ -197,10 +193,10 @@ plot(rules_dist)
 plot(rules_us)
 plot(rules_can)
 
-plot(rules_all,method="graph",interactive=TRUE,shading=NA)
-plot(rules_local,method="graph",interactive=TRUE,shading=NA)
+plot(rules_all,method="graph")#,interactive=TRUE)
+plot(rules_local,method="graph",interactive=TRUE)
 plot(rules_dist,method="graph",interactive=TRUE,shading=NA)
-plot(rules_us,method="graph",interactive=TRUE,shading=NA)
+plot(rules_us,method="graph")#,interactive=TRUE,shading=NA)
 plot(rules_can,method="graph",interactive=TRUE,shading=NA)
 
 plot(rules,method="graph")
