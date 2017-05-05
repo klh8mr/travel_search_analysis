@@ -8,7 +8,7 @@ library(lubridate)
 
 setwd("~/UVaMSDS/MachineLearning/FinalProject")
 df <- fromJSON(file("city_search.json"))
-df_save -> df
+df_save <- df
 
 
 ## Clean dataframe
