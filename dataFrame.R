@@ -76,6 +76,9 @@ cityData <- cityData[,c(1:3,7:18,4:6)]
 # write out to csv for market analysis
 write.csv(cityData[,c(5:15,18)], "marketbasket.csv",row.names = FALSE)
 
+# write out to csv for recommender
+write.csv(cityData[,c(1,5:15)], "recommender.csv", row.names = FALSE)
+
 #################################
 ## Breaking Out List of States ## 
 #################################
@@ -348,21 +351,117 @@ for (i in 1:nrow(dftemp)){
   }
 }
 
+dftemp["min_distance"] <- NA
+
+# populate min distance
+for (i in 1:nrow(dftemp)){
+  # no min for one city
+  if(dftemp[1][[1]][i]==1){
+    dftemp[36][[1]][i] <- 0
+  } else if(dftemp[1][[1]][i]==2){
+    # calculate the distance between 2 cities
+    dist <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dftemp[36][[1]][i] <- dist
+  } else if(dftemp[1][[1]][i]==3){
+    # caluculate the min between 3 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2)
+  } else if(dftemp[1][[1]][i]==4){
+    # caluculate the min between 4 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3)
+  } else if(dftemp[1][[1]][i]==5){
+    # caluculate the min between 5 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4)
+  } else if(dftemp[1][[1]][i]==6){
+    # caluculate the min between 6 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dist5 <- deg.dist(dftemp[22][[1]][i],dftemp[21][[1]][i],dftemp[24][[1]][i],dftemp[23][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4,dist5)
+  } else if(dftemp[1][[1]][i]==7){
+    # caluculate the min between 7 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dist5 <- deg.dist(dftemp[22][[1]][i],dftemp[21][[1]][i],dftemp[24][[1]][i],dftemp[23][[1]][i])
+    dist6 <- deg.dist(dftemp[24][[1]][i],dftemp[23][[1]][i],dftemp[26][[1]][i],dftemp[25][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4,dist5,dist6)
+  } else if(dftemp[1][[1]][i]==8){
+    # caluculate the min between 8 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dist5 <- deg.dist(dftemp[22][[1]][i],dftemp[21][[1]][i],dftemp[24][[1]][i],dftemp[23][[1]][i])
+    dist6 <- deg.dist(dftemp[24][[1]][i],dftemp[23][[1]][i],dftemp[26][[1]][i],dftemp[25][[1]][i])
+    dist7 <- deg.dist(dftemp[26][[1]][i],dftemp[25][[1]][i],dftemp[28][[1]][i],dftemp[27][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4,dist5,dist6,dist7)
+  } else if(dftemp[1][[1]][i]==9){
+    # caluculate the min between 9 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dist5 <- deg.dist(dftemp[22][[1]][i],dftemp[21][[1]][i],dftemp[24][[1]][i],dftemp[23][[1]][i])
+    dist6 <- deg.dist(dftemp[24][[1]][i],dftemp[23][[1]][i],dftemp[26][[1]][i],dftemp[25][[1]][i])
+    dist7 <- deg.dist(dftemp[26][[1]][i],dftemp[25][[1]][i],dftemp[28][[1]][i],dftemp[27][[1]][i])
+    dist8 <- deg.dist(dftemp[28][[1]][i],dftemp[27][[1]][i],dftemp[30][[1]][i],dftemp[29][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4,dist5,dist6,dist7,dist8)
+  } else if(dftemp[1][[1]][i]==10){
+    # caluculate the min between 10 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dist5 <- deg.dist(dftemp[22][[1]][i],dftemp[21][[1]][i],dftemp[24][[1]][i],dftemp[23][[1]][i])
+    dist6 <- deg.dist(dftemp[24][[1]][i],dftemp[23][[1]][i],dftemp[26][[1]][i],dftemp[25][[1]][i])
+    dist7 <- deg.dist(dftemp[26][[1]][i],dftemp[25][[1]][i],dftemp[28][[1]][i],dftemp[27][[1]][i])
+    dist8 <- deg.dist(dftemp[28][[1]][i],dftemp[27][[1]][i],dftemp[30][[1]][i],dftemp[29][[1]][i])
+    dist9 <- deg.dist(dftemp[30][[1]][i],dftemp[29][[1]][i],dftemp[32][[1]][i],dftemp[31][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4,dist5,dist6,dist7,dist8,dist9)
+  } else {
+    # caluculate the min between 11 cities
+    dist1 <- deg.dist(dftemp[14][[1]][i],dftemp[13][[1]][i],dftemp[16][[1]][i],dftemp[15][[1]][i])
+    dist2 <- deg.dist(dftemp[16][[1]][i],dftemp[15][[1]][i],dftemp[18][[1]][i],dftemp[17][[1]][i])
+    dist3 <- deg.dist(dftemp[18][[1]][i],dftemp[17][[1]][i],dftemp[20][[1]][i],dftemp[19][[1]][i])
+    dist4 <- deg.dist(dftemp[20][[1]][i],dftemp[19][[1]][i],dftemp[22][[1]][i],dftemp[21][[1]][i])
+    dist5 <- deg.dist(dftemp[22][[1]][i],dftemp[21][[1]][i],dftemp[24][[1]][i],dftemp[23][[1]][i])
+    dist6 <- deg.dist(dftemp[24][[1]][i],dftemp[23][[1]][i],dftemp[26][[1]][i],dftemp[25][[1]][i])
+    dist7 <- deg.dist(dftemp[26][[1]][i],dftemp[25][[1]][i],dftemp[28][[1]][i],dftemp[27][[1]][i])
+    dist8 <- deg.dist(dftemp[28][[1]][i],dftemp[27][[1]][i],dftemp[30][[1]][i],dftemp[29][[1]][i])
+    dist9 <- deg.dist(dftemp[30][[1]][i],dftemp[29][[1]][i],dftemp[32][[1]][i],dftemp[31][[1]][i])
+    dist10 <- deg.dist(dftemp[32][[1]][i],dftemp[31][[1]][i],dftemp[34][[1]][i],dftemp[33][[1]][i])
+    dftemp[36][[1]][i]<-min(dist1,dist2,dist3,dist4,dist5,dist6,dist7,dist8,dist9,dist10)
+  }
+}
+
 # combine with master 
-cityData <- cbind(cityData, dftemp$avg_distance)
+cityData <- cbind(cityData, dftemp$avg_distance, dftemp$min_distance)
 
 # rename columns
 colnames(cityData)[21] <- "avg_distance"
+colnames(cityData)[22] <- "min_distance"
 
 # reorder the columns
-cityData <- cityData[,c(1:17,21,18:20)]
+cityData <- cityData[,c(1:17,21:22,18:20)]
 
 # Convert session and joining date to lubridate format
 cityData["session_date"] <- ymd(anydate(as.POSIXct(as.numeric(cityData$unix_timestamp),origin="1970-01-01")))
 cityData$joining_date <- ymd(cityData$joining_date)
 
 # reorder the columns and save useful columns
-cityData <- cityData[,c(1,22,3:5,18:21)]
+cityData <- cityData[,c(1,23,3:5,18:22)]
 
 # write out master df
 write.csv(cityData, "cityData.csv", row.names = FALSE)
