@@ -4,7 +4,13 @@ library(dplyr)
 library(tidyr)
 library(arules)
 library(arulesViz) 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 
+>>>>>>> origin/master
 
 setwd("~/UVaMSDS/MachineLearning/FinalProject")
 
@@ -38,7 +44,7 @@ write.csv(df_sub, "data_dist.csv", row.names=FALSE)
 
 
 # 3. Split US and Canada
-df <- cityData[ , c(5:15, 18)] # same as above but keep country column
+df <- cityData # same as above but keep country column
 
 ## US
 df_sub <- df[df$country=="US", -12]

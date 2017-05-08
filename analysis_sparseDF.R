@@ -27,7 +27,7 @@ x <- 1
 table(df$user_id)[(table(df$user_id)==x)] %>%
   rownames()
 
-# missing country
+# missing country - most likely Canada
 unique(df$country)
 df$country[7]==''
 countryNA <- df[df$country=='',]
@@ -52,10 +52,10 @@ df$session_wknd[df$session_wday==1 | df$session_wday==7] <- 1
 ## Cities
 ###############################################
 # no repeat city names with mispellings
-sort(names(df[,10:98]))
+sort(names(df[,11:99]))
 
 # list of most frequently searched cities - lines up with market basket analysis
-city_counts <- sapply(df[,10:98], function(x) sum(x))
+city_counts <- sapply(df[,11:99], function(x) sum(x))
 sort(city_counts, decreasing=TRUE)
 
 
@@ -93,7 +93,7 @@ biplot(pr.out,scale=0)
 
 
 ##### Perform PCA on TXNS #####
-pr.out = prcomp(df[,10:98], scale = TRUE)
+pr.out = prcomp(df[,11:99], scale = TRUE)
 names(pr.out)
 
 ## means and standard deviations used for scaling prior to PCA
@@ -131,7 +131,7 @@ biplot(pr.out,scale=0)
 clusters <- kmeans(df_users[,c(4:8)], 2) # based on user characteristics
 clusters <- kmeans(df_users[,c(9:97)], 2) # based on cities - sparse
 clusters <- kmeans(df_users[,c(98:102)], 2) # based on cities - PCA
-clusters <- kmeans(df_users[,c(4:7,8, 98:102)], 2) # based on user characteristics AND cities - PCA
+clusters <- kmeans(df_users[,c(4:8, 98:102)], 2) # based on user characteristics AND cities - PCA
 df_users$label <- clusters$cluster
 
 table(df_users$label, df_users$country)
@@ -144,8 +144,16 @@ plot_ly(df_users, x = ~avgTimeElapsed, y = ~pc1, z = ~n_visits,
         type = "scatter3d", color = ~label)
 
 # is min_distance the dividing factor? under 5000 are "serious" buyers
-ggplot(df_users, aes(x=avgTimeElapsed, y=min_distance, color=label)) +
+ggplot(df_users, aes(x=min_distance, y=avg_distance, color=label)) +
   geom_point()
+
+# investigate small group of level 2 by the group of 1
+subset_dfUsers <- df_users[(df_users$label == 2 & df_users$min_distance < 5000),]
+
+# look into a few
+df[(df$user_id == 5870),]
+
+subset_userID <- df_users[(df_users$user_id == 5870),103]
 
 plot_ly(df_users, x = ~avgTimeElapsed, y = ~min_distance, z = ~CitiesSearched_avg,
         type = "scatter3d", color = ~label)
@@ -158,10 +166,4 @@ clus <- kmeans(dat, centers=2)
 plotcluster(dat,clus$cluster)
 
 with(df_users[,c(4:8)], pairs(dat, col=c(4:7)[clus$cluster]))
-
-## Recomender Systems
-###############################################
-
-#https://www.r-bloggers.com/recommender-systems-101-a-step-by-step-practical-example-in-r/
-#http://blog.yhat.com/posts/recommender-system-in-r.html
 
