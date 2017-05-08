@@ -66,7 +66,7 @@ image(sample(txn_all, 100))
 
 # Generate rules:  Two options for generating rules below
 rules_all <- apriori(data=txn_all, 
-                 parameter=list(support=0.005, confidence=0.1, minlen=2)) 
+                 parameter=list(support=0.01, confidence=0.1, minlen=2)) 
 summary(rules_all)
 inspect(sort(rules_all, by="lift", decreasing=TRUE))
 
