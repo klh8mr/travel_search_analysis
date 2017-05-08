@@ -4,13 +4,6 @@ library(dplyr)
 library(tidyr)
 library(arules)
 library(arulesViz) 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-
->>>>>>> origin/master
 
 setwd("~/UVaMSDS/MachineLearning/FinalProject")
 
