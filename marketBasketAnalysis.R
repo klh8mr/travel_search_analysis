@@ -3,6 +3,7 @@ library(plyr)
 library(dplyr)
 library(tidyr)
 library(arules)
+library(arulesViz) 
 
 
 setwd("~/UVaMSDS/MachineLearning/FinalProject")
@@ -66,7 +67,7 @@ image(sample(txn_all, 100))
 
 # Generate rules:  Two options for generating rules below
 rules_all <- apriori(data=txn_all, 
-                 parameter=list(support=0.01, confidence=0.1, minlen=2)) 
+                 parameter=list(support=0.008, confidence=0.1, minlen=2)) 
 summary(rules_all)
 inspect(sort(rules_all, by="lift", decreasing=TRUE))
 
@@ -126,7 +127,7 @@ inspect(sort(rules_can, by="lift", decreasing=TRUE))
 
 ### Visualization
 ###############################################
-library("arulesViz") 
+
 # https://cran.r-project.org/web/packages/arulesViz/vignettes/arulesViz.pdf
 # http://www.jmlr.org/papers/volume12/hahsler11a/hahsler11a.pdf
 plot(rules_all)
@@ -135,11 +136,11 @@ plot(rules_dist)
 plot(rules_us)
 plot(rules_can)
 
-plot(rules_all,method="graph")#,interactive=TRUE)
+plot(rules_all,method="graph",interactive=TRUE)
 plot(rules_local,method="graph",interactive=TRUE)
-plot(rules_dist,method="graph",interactive=TRUE,shading=NA)
-plot(rules_us,method="graph")#,interactive=TRUE,shading=NA)
-plot(rules_can,method="graph",interactive=TRUE,shading=NA)
+plot(rules_dist,method="graph",interactive=TRUE)
+plot(rules_us,method="graph",interactive=TRUE)
+plot(rules_can,method="graph",interactive=TRUE)
 
 plot(rules,method="graph")
 # Size = support
